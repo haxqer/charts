@@ -1,3 +1,10 @@
+{{- define "sentry.prefix" -}}
+    {{- if .Values.prefix -}}
+        {{.Values.prefix}}-
+    {{- else -}}
+    {{- end -}}
+{{- end -}}
+
 {{- define "sentry.port" -}}9000{{- end -}}
 
 {{/* vim: set filetype=mustache: */}}

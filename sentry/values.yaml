@@ -12,7 +12,7 @@ user:
 images:
   sentry:
     repository: getsentry/sentry
-    tag: 0fffc30
+    tag: cc9f7d1
     pullPolicy: IfNotPresent
     # imagePullSecrets: []
 
@@ -89,7 +89,7 @@ symbolicator:
   enabled: false
 
 auth:
-  register: true
+  register: false
 
 github: {} # https://github.com/settings/apps (Create a Github App)
 # github:
@@ -278,3 +278,7 @@ config:
   sentryConfPy: |
     # No Python Extension Config Given
 
+
+rabbitmq:
+  ## If disabled, Redis will be used instead as the broker.
+  enabled: false
