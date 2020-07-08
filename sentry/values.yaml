@@ -58,12 +58,12 @@ sentry:
     nodeSelector: {}
     # tolerations: []
     # podLabels: []
-  postProcessForward:
-    replicas: 1
-    env: {}
-    resources: {}
-    affinity: {}
-    nodeSelector: {}
+#  postProcessForward:
+#    replicas: 1
+#    env: {}
+#    resources: {}
+#    affinity: {}
+#    nodeSelector: {}
     # tolerations: []
     # podLabels: []
 
