@@ -1,0 +1,247 @@
+# Default values for sentry.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+user:
+  create: true
+  email: admin@example.com
+  password: 123123
+
+image:
+  sentry:
+    repository: getsentry/sentry
+    tag: 0fffc30
+    pullPolicy: IfNotPresent
+    # imagePullSecrets: []
+
+sentry:
+  web:
+    replicas: 1
+    env: {}
+    probeInitialDelaySeconds: 10
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    # tolerations: []
+    # podLabels: []
+
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 50
+
+  worker:
+    replicas: 3
+    # concurrency: 4
+    env: {}
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    # tolerations: []
+    # podLabels: []
+
+    # it's better to use prometheus adapter and scale based on
+    # the size of the rabbitmq queue
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 50
+
+  cron:
+    env: {}
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    # tolerations: []
+    # podLabels: []
+  postProcessForward:
+    replicas: 1
+    env: {}
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    # tolerations: []
+    # podLabels: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+mail:
+  backend: dummy # smtp
+  useTls: false
+  username: ""
+  password: ""
+  port: 25
+  host: ""
+  from: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  name: sentry
+  type: ClusterIP
+  externalPort: 9000
+  annotations: {}
+  # externalIPs:
+  # - 192.168.0.1
+  # loadBalancerSourceRanges: []
+
+hooks:
+  enabled: true
+  dbInit:
+    resources:
+      limits:
+        memory: 2048Mi
+      requests:
+        cpu: 300m
+        memory: 2048Mi
+
+ingress:
+  enabled: false
+#  annotations: {}
+#  kubernetes.io/ingress.class: nginx
+#  kubernetes.io/tls-acme: "true"
+#  hosts:
+#    - host: chart-example.local
+#      paths: []
+#  tls: []
+#    - secretName: chart-example-tls
+#      hosts:
+#        - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+filestore:
+  # Set to one of filesystem, gcs or s3 as supported by Sentry.
+  backend: filesystem
+
+  filesystem:
+    path: /var/lib/sentry/files
+
+    ## Enable persistence using Persistent Volume Claims
+    ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    persistence:
+      enabled: true
+      ## database data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 10Gi
+
+      ## Whether to mount the persistent volume to the Sentry worker and
+      ## cron deployments. This setting needs to be enabled for some advanced
+      ## Sentry features, such as private source maps. If you disable this
+      ## setting, the Sentry workers will not have access to artifacts you upload
+      ## through the web deployment.
+      ## Please note that you may need to change your accessMode to ReadWriteMany
+      ## if you plan on having the web, worker and cron deployments run on
+      ## different nodes.
+      persistentWorkers: false
+
+  ## Point this at a pre-configured secret containing a service account. The resulting
+  ## secret will be mounted at /var/run/secrets/google
+  gcs:
+  # credentialsFile: credentials.json
+  #  secretName:
+  #  bucketName:
+
+  ## Currently unconfigured and changing this has no impact on the template configuration.
+  s3: {}
+  #  accessKey:
+  #  secretKey:
+  #  bucketName:
+  #  endpointUrl:
+  #  signature_version:
+  #  region_name:
+  #  default_acl:
+
+redis:
+  enabled: true
+  nameOverride: sentry-redis
+  usePassword: false
+  ## Just omit the password field if your redis cluster doesn't use password
+  # password: redis
+  master:
+    persistence:
+      enabled: true
+
+## This value is only used when redis.enabled is set to false
+##
+externalRedis:
+  ## Hostname or ip address of external redis cluster
+  ##
+  # host: "redis"
+  port: 6379
+  ## Just omit the password field if your redis cluster doesn't use password
+  # password: redis
+
+postgresql:
+  enabled: true
+  nameOverride: sentry-postgresql
+  postgresqlUsername: postgres
+  postgresqlDatabase: sentry
+  replication:
+    enabled: false
+    slaveReplicas: 2
+    synchronousCommit: "on"
+    numSynchronousReplicas: 1
+
+## This value is only used when postgresql.enabled is set to false
+##
+externalPostgresql:
+  # host: postgres
+  port: 5432
+  username: postgres
+  # password: postgres
+  database: sentry
+  # sslMode: require
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+config:
+  configYml: |
+    # No YAML Extension Config Given
+  sentryConfPy: |
+    # No Python Extension Config Given
+
