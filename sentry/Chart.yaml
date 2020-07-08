@@ -22,6 +22,8 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 appVersion: 9.1.2
 
+icon: https://raw.githubusercontent.com/haxqer/charts/master/sentry/haxqer.png
+
 dependencies:
   - name: redis
     repository: https://charts.bitnami.com/bitnami

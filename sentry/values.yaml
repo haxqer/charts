@@ -9,7 +9,7 @@ user:
   email: admin@example.com
   password: 123123
 
-image:
+images:
   sentry:
     repository: getsentry/sentry
     tag: 0fffc30
@@ -85,6 +85,31 @@ mail:
   host: ""
   from: ""
 
+symbolicator:
+  enabled: false
+
+auth:
+  register: true
+
+github: {} # https://github.com/settings/apps (Create a Github App)
+# github:
+#   appId: "xxxx"
+#   appName: MyAppName
+#   clientId: "xxxxx"
+#   clientSecret: "xxxxx"
+#   privateKey: "-----BEGIN RSA PRIVATE KEY-----\nMIIEpA" !!!! Don't forget a trailing \n
+#   webhookSecret:  "xxxxx`"
+
+githubSso: {} # https://github.com/settings/developers (Create a OAuth App)
+  # clientId: "xx"
+# clientSecret: "xx"
+
+slack: {}
+# slack:
+#   clientId:
+#   clientSecret:
+#   verificationToken:
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -97,6 +122,13 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+system:
+  url: ""
+  adminEmail: ""
+  secretKey: 'icLq77rCyY_qrMMpXa6TQNjkDV6mU!c'
+  public: false #  This should only be used if you’re installing Sentry behind your company’s firewall.
+
 
 service:
   name: sentry
@@ -217,6 +249,7 @@ postgresql:
   nameOverride: sentry-postgresql
   postgresqlUsername: postgres
   postgresqlDatabase: sentry
+  port: 5432
   replication:
     enabled: false
     slaveReplicas: 2
