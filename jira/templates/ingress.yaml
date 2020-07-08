@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-  {{- $fullName := include "sentry.fullname" . -}}
+  {{- $fullName := include "jira.fullname" . -}}
   {{- $svcPort := .Values.service.externalPort -}}
   {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
@@ -10,7 +10,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-  {{- include "sentry.labels" . | nindent 4 }}
+  {{- include "jira.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
@@ -36,6 +36,6 @@ spec:
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
-    {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}

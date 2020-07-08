@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jira.fullname" . }}-web
+  labels:
+    app: {{ template "jira.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "jira.fullname" . }}
+      release: "{{ .Release.Name }}"
+      role: web
+  template:
+    metadata:
+      annotations:
+      {{- if .Values.jira.web.annotations }}
+      {{ toYaml .Values.jira.web.annotations | indent 8 }}
+      {{- end }}
+      labels:
+        app: {{ template "jira.fullname" . }}
+        release: "{{ .Release.Name }}"
+        role: web
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "jira.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ template "jira.port" }}
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /
+              port: {{ template "jira.port" }}
+            initialDelaySeconds: {{ .Values.jira.web.probeInitialDelaySeconds }}
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: {{ .Values.filestore.filesystem.path }}
+              name: jira-data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: jira-data
+          {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "jira.fullname" . }}-data
+          {{- else }}
+          emptyDir: {}
+        {{ end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
