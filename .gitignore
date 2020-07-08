@@ -1,2 +1,5 @@
 .DS_Store
 .idea
+/*.tgz
+nginx/charts/
+sentry/templates/tests/

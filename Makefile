@@ -1,0 +1,2 @@
+sentry:
+	helm package sentry
