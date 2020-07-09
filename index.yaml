@@ -3,14 +3,38 @@ entries:
   jira:
   - apiVersion: v2
     appVersion: 8.8.1
-    created: "2020-07-08T22:59:07.559488+08:00"
+    created: "2020-07-09T11:32:48.817623+08:00"
     dependencies:
     - condition: mysql.enabled
       name: mysql
       repository: https://kubernetes-charts.storage.googleapis.com/
       version: 1.6.6
     description: A Helm chart for Kubernetes
-    digest: 8b01bfd0cb78a9db0143271be6d83736887cb166ca104e528cce4dcc41b84370
+    digest: 1d5e5b6e01d3389b39d89ed9f68e51f95e39fe5d58af98e58e94e31a6826c8f5
+    icon: https://raw.githubusercontent.com/haxqer/charts/master/images/haxqer.png
+    keywords:
+    - jira
+    - crack
+    maintainers:
+    - email: haxqer666@gmail.com
+      name: haxqer
+    name: jira
+    sources:
+    - https://github.com/haxqer/jira
+    type: application
+    urls:
+    - jira-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 8.8.1
+    created: "2020-07-09T11:32:48.815068+08:00"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 1.6.6
+    description: A Helm chart for Kubernetes
+    digest: c032f2554a7fdfdf0b675fde31d8becaf69515ed3ba0ff28e40ace338ce942bd
     icon: https://raw.githubusercontent.com/haxqer/charts/master/images/haxqer.png
     keywords:
     - jira
@@ -28,7 +52,7 @@ entries:
   sentry:
   - apiVersion: v2
     appVersion: 9.1.2
-    created: "2020-07-08T22:59:07.566931+08:00"
+    created: "2020-07-09T11:32:48.82318+08:00"
     dependencies:
     - condition: redis.enabled
       name: redis
@@ -39,11 +63,11 @@ entries:
       repository: https://kubernetes-charts.storage.googleapis.com/
       version: 8.2.1
     description: A Helm chart for Kubernetes
-    digest: c8a091627188f4f99afc0a915d90ad80d26cfd5f1bf3b2ee2850a407a5b59d23
+    digest: c84bac5bbf8cc50aa2e8e7e4d2683090d91128cf7cd815ec1d8b2d00bae22f05
     icon: https://raw.githubusercontent.com/haxqer/charts/master/images/haxqer.png
     name: sentry
     type: application
     urls:
     - sentry-0.1.1.tgz
     version: 0.1.1
-generated: "2020-07-08T22:59:07.555945+08:00"
+generated: "2020-07-09T11:32:48.812867+08:00"

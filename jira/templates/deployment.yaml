@@ -45,15 +45,6 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
-          livenessProbe:
-            failureThreshold: 10
-            httpGet:
-              path: /
-              port: {{ template "jira.port" }}
-            initialDelaySeconds: {{ .Values.jira.web.probeInitialDelaySeconds }}
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 5
           volumeMounts:
             - mountPath: {{ .Values.filestore.filesystem.path }}
               name: jira-data
